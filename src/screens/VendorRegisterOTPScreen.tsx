@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
     Text,
+    StyleSheet,
     Image,
     TextInput,
     TouchableOpacity,
@@ -17,9 +18,10 @@ type Props = NativeStackScreenProps<RootStackParamList, 'VendorRegisterOTP'>;
 
 const VendorRegisterOTPScreen: React.FC<Props> = ({ route, navigation }) => {
     const { mobileNumber } = route.params;
+    const [phone, setPhone] = useState(mobileNumber || '');
     const [otp, setOtp] = useState(['', '', '', '']);
     const [ownerName, setOwnerName] = useState('');
-    const [timer, setTimer] = useState(28);
+    const [timer, setTimer] = useState(20);
     
     const otpRefs = useRef<(TextInput | null)[]>([]);
 
@@ -58,55 +60,80 @@ const VendorRegisterOTPScreen: React.FC<Props> = ({ route, navigation }) => {
         }
     };
 
+    useEffect(() => {
+        if (otp.every(digit => digit !== '')) {
+            navigation.navigate('OTPVerify', { mobileNumber: phone });
+        }
+    }, [otp, navigation, phone]);
+
+    const handleResendOtp = () => {
+        if (timer === 0 && phone.length === 10) {
+            setTimer(20);
+            console.log('Resending OTP to:', phone);
+        }
+    };
+
     return (
-        <SafeAreaView className="flex-1 bg-[#f5f5f5]">
+        <SafeAreaView style={styles.safeArea}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                className="flex-1 justify-center items-center p-4"
+                style={styles.keyboardView}
             >
                 <ScrollView 
-                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                    contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
-                    className="w-full"
+                    keyboardShouldPersistTaps="handled"
                 >
-                    <View className="bg-white rounded-[25px] w-full max-w-[350px] p-6 shadow-lg">
-                        {/* Top Section */}
-                        <View className="flex-row items-center mb-6">
+                    <View style={styles.container}>
+                        {/* Header Section */}
+                        <View style={styles.headerContainer}>
                             <Image
                                 source={{ uri: 'https://res.cloudinary.com/ddirrlngo/image/upload/v1772698012/logo_ws8i3j.png' }}
-                                className="w-10 h-10 rounded-full"
+                                style={styles.logo}
                                 resizeMode="contain"
                             />
+                            <View style={styles.titleRow}>
+                                <Text style={styles.titleVendor}>VENDOR </Text>
+                                <Text style={styles.titleRegistration}>REGISTRATION</Text>
+                            </View>
                         </View>
 
-                        <View className="flex-row mb-8">
-                            <Text className="text-2xl font-black text-[#f97316]">VENDOR </Text>
-                            <Text className="text-2xl font-black text-[#064e3b]">REGISTRATION</Text>
-                        </View>
-
-                        {/* Mobile Input Section */}
-                        <View className="flex-row items-center bg-[#f5e6c8] border border-[#eab308] rounded-full px-4 h-12 mb-4">
+                        {/* Phone Input Field */}
+                        <View style={styles.phoneInputRow}>
                             <Image
                                 source={{ uri: 'https://res.cloudinary.com/ddirrlngo/image/upload/v1772697939/india_flag_bifvus.png' }}
-                                className="w-6 h-4 mr-2"
+                                style={styles.flag}
                             />
-                            <Text className="text-base font-bold mr-2">+91</Text>
-                            <View className="w-[1px] h-6 bg-gray-400 mr-3" />
-                            <Text className="text-gray-600 text-sm flex-1">{mobileNumber || 'Enter the Mobile Number'}</Text>
+                            <Text style={styles.countryCode}>+91</Text>
+                            <View style={styles.verticalDivider} />
+                            <TextInput
+                                style={styles.phoneInput}
+                                placeholder="Enter the Mobile Number"
+                                placeholderTextColor="#888"
+                                value={phone}
+                                onChangeText={setPhone}
+                                keyboardType="numeric"
+                                maxLength={10}
+                            />
                         </View>
 
-                        {/* SEND OTP Button */}
+                        {/* Send OTP Button - Dynamic Color and Interaction */}
                         <TouchableOpacity 
                             activeOpacity={0.7}
-                            className="bg-[#fcd9b6] rounded-[12px] h-10 justify-center items-center shadow-sm w-32 self-center mb-6"
+                            onPress={handleResendOtp}
+                            disabled={timer > 0 || phone.length !== 10}
+                            style={[
+                                styles.sendOtpButton, 
+                                (timer === 0 && phone.length === 10) ? styles.sendOtpActive : styles.sendOtpDisabled
+                            ]}
                         >
-                            <Text className="text-white font-bold text-sm tracking-widest">SEND OTP</Text>
+                            <Text style={styles.sendOtpText}>SEND OTP</Text>
                         </TouchableOpacity>
 
-                        {/* OTP Section */}
-                        <View className="flex-row justify-between mb-6 px-2">
+                        {/* OTP Input Boxes */}
+                        <View style={styles.otpRow}>
                              {otp.map((digit, index) => (
-                                <View key={index} className="relative">
+                                <View key={index} style={styles.otpBox}>
                                     <TextInput
                                         ref={(el) => { otpRefs.current[index] = el; }}
                                         value={digit}
@@ -114,54 +141,220 @@ const VendorRegisterOTPScreen: React.FC<Props> = ({ route, navigation }) => {
                                         onKeyPress={(e) => handleBackPress(index, e)}
                                         keyboardType="numeric"
                                         maxLength={1}
-                                        className="w-12 h-12 border border-gray-300 rounded-[10px] bg-[#f9f9f9] text-center text-transparent"
+                                        style={styles.otpInput}
+                                        textAlign="center"
                                     />
-                                    {digit ? (
-                                        <View className="absolute inset-0 pointer-events-none justify-center items-center">
-                                            <View className="w-2 h-2 rounded-full bg-black" />
-                                        </View>
-                                    ) : null}
                                 </View>
                             ))}
                         </View>
 
-                        {/* Resend Text */}
-                        <Text className="text-center text-gray-700 font-medium mb-8">
-                            Resend OTP in <Text className="text-[#f97316]">{formatTime(timer)}</Text>
+                        {/* Resend Timer */}
+                        <Text style={styles.timerText}>
+                            Resend OTP in <Text style={styles.timerHighlight}>{formatTime(timer)}</Text>
                         </Text>
 
                         {/* Owner Name Section */}
-                        <Text className="text-base font-bold text-gray-900 mb-2">Owner Name</Text>
-                        <TextInput
-                            placeholder="Enter Your Full Name"
-                            placeholderTextColor="#888"
-                            value={ownerName}
-                            onChangeText={setOwnerName}
-                            className="bg-[#f5e6c8] border border-[#eab308] rounded-full px-4 h-12 mb-4 text-gray-800"
-                        />
+                        <Text style={styles.fieldLabel}>Owner Name</Text>
+                        <View style={styles.ownerInputContainer}>
+                            <TextInput
+                                placeholder="Enter Your Full Name"
+                                placeholderTextColor="#888"
+                                value={ownerName}
+                                onChangeText={setOwnerName}
+                                style={styles.ownerInput}
+                            />
+                        </View>
 
-                        {/* Agreement Section */}
-                        <TouchableOpacity activeOpacity={0.6} className="mb-4">
-                            <Text className="text-[11px] text-gray-500 text-center">
-                                By Signing Up, You Agree to the{' '}
-                                <Text className="text-[#f97316] font-semibold">Term & Condition</Text>
+                        {/* Terms Text */}
+                        <Text style={styles.termsText}>
+                            By Signing Up, You Agree to the{' '}
+                            <Text style={styles.termsHighlight}>Term & Condition</Text>
+                        </Text>
+
+                        {/* Divider Line */}
+                        <View style={styles.divider} />
+
+                        {/* Login Text */}
+                        <TouchableOpacity 
+                            onPress={() => navigation.navigate('VendorLogin')}
+                            activeOpacity={0.6}
+                        >
+                            <Text style={styles.loginText}>
+                                Already have an account ? <Text style={styles.loginHighlight}>Login Here</Text>
                             </Text>
                         </TouchableOpacity>
-
-                        <View className="h-[1px] bg-gray-200 w-full mb-4" />
-
-                        {/* Login Section */}
-                        <View className="flex-row justify-center">
-                            <Text className="text-sm text-gray-600">Already have an account ? </Text>
-                            <TouchableOpacity onPress={() => navigation.navigate('VendorLogin')}>
-                                <Text className="text-sm text-[#f97316] font-bold underline">Login Here</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#FFFFFF',
+    },
+    keyboardView: {
+        flex: 1,
+    },
+    scrollContent: {
+        flexGrow: 1,
+        paddingTop: 40,
+        paddingBottom: 20,
+    },
+    container: {
+        flex: 1,
+        paddingHorizontal: 22,
+    },
+    headerContainer: {
+        alignItems: 'center',
+        marginBottom: 30,
+    },
+    logo: {
+        width: 45,
+        height: 45,
+        borderRadius: 22.5,
+        marginBottom: 12,
+    },
+    titleRow: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    titleVendor: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#FF7A00',
+    },
+    titleRegistration: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#1B5E20',
+    },
+    phoneInputRow: {
+        flexDirection: 'row',
+        backgroundColor: '#F5E6CC',
+        borderRadius: 12,
+        height: 50,
+        paddingHorizontal: 15,
+        alignItems: 'center',
+    },
+    flag: {
+        width: 20,
+        height: 15,
+    },
+    countryCode: {
+        marginLeft: 8,
+        fontSize: 15,
+        color: '#000',
+        fontWeight: '500',
+    },
+    verticalDivider: {
+        width: 1,
+        height: 25,
+        backgroundColor: '#999',
+        marginHorizontal: 12,
+    },
+    phoneInput: {
+        flex: 1,
+        fontSize: 15,
+        color: '#333',
+        padding: 0,
+    },
+    sendOtpButton: {
+        height: 50,
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+    },
+    sendOtpDisabled: {
+        backgroundColor: '#F4C7A1', // Light orange
+    },
+    sendOtpActive: {
+        backgroundColor: '#FF7A00', // Dark orange
+    },
+    sendOtpText: {
+        color: '#FFFFFF',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    otpRow: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 20,
+    },
+    otpBox: {
+        width: 50,
+        height: 50,
+        borderRadius: 10,
+        borderWidth: 1.5,
+        borderColor: '#333',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginHorizontal: 8,
+    },
+    otpInput: {
+        width: '100%',
+        height: '100%',
+        fontSize: 20,
+        color: '#000',
+        fontWeight: 'bold',
+        padding: 0,
+    },
+    timerText: {
+        textAlign: 'center',
+        marginTop: 15,
+        fontSize: 13,
+        color: '#333',
+    },
+    timerHighlight: {
+        color: '#FF7A00',
+        fontWeight: '600',
+    },
+    fieldLabel: {
+        fontSize: 15,
+        marginTop: 30,
+        marginBottom: 8,
+        color: '#000',
+        fontWeight: '600',
+    },
+    ownerInputContainer: {
+        backgroundColor: '#F5E6CC',
+        borderRadius: 12,
+        height: 50,
+        paddingHorizontal: 15,
+        justifyContent: 'center',
+    },
+    ownerInput: {
+        fontSize: 15,
+        color: '#333',
+        padding: 0,
+    },
+    termsText: {
+        fontSize: 12,
+        color: '#777',
+        marginTop: 15,
+        textAlign: 'center',
+    },
+    termsHighlight: {
+        color: '#FF7A00',
+        fontWeight: '600',
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#EEE',
+        marginVertical: 20,
+    },
+    loginText: {
+        fontSize: 14,
+        textAlign: 'center',
+        color: '#333',
+    },
+    loginHighlight: {
+        color: '#FF7A00',
+        fontWeight: 'bold',
+    },
+});
 
 export default VendorRegisterOTPScreen;

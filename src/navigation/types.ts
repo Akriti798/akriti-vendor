@@ -5,6 +5,7 @@ export type RootStackParamList = {
     VendorLogin: undefined;
     VendorRegister: undefined;
     VendorRegisterOTP: { mobileNumber: string };
+    OTPVerify: { mobileNumber: string };
     MainApp: NavigatorScreenParams<TabStackParamList>;
 };
 

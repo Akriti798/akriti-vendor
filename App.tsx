@@ -9,6 +9,7 @@ import VendorSplashScreen from './src/screens/VendorSplashScreen';
 import VendorLoginScreen from './src/screens/VendorLoginScreen';
 import VendorRegisterScreen from './src/screens/VendorRegisterScreen';
 import VendorRegisterOTPScreen from './src/screens/VendorRegisterOTPScreen';
+import OTPVerifyScreen from './src/screens/OTPVerifyScreen';
 import MainTabNavigator from './src/navigation/MainTabNavigator';
 import { RootStackParamList } from './src/navigation/types';
 
@@ -47,6 +48,10 @@ function App(): React.JSX.Element {
           <Stack.Screen
             name="VendorLogin"
             component={VendorLoginScreen}
+          />
+          <Stack.Screen
+            name="OTPVerify"
+            component={OTPVerifyScreen}
           />
           <Stack.Screen
             name="MainApp"
