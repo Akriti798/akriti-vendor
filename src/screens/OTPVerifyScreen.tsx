@@ -110,7 +110,7 @@ const OTPVerifyScreen: React.FC<Props> = ({ route, navigation }) => {
                     {/* Verify Button */}
                     <TouchableOpacity 
                         style={styles.verifyButton}
-                        onPress={() => navigation.navigate('MainApp', { screen: 'Home' })}
+                        onPress={() => navigation.navigate('VendorBusinessDetails')}
                     >
                         <Text style={styles.verifyButtonText}>Verify</Text>
                     </TouchableOpacity>

@@ -10,6 +10,11 @@ import VendorLoginScreen from './src/screens/VendorLoginScreen';
 import VendorRegisterScreen from './src/screens/VendorRegisterScreen';
 import VendorRegisterOTPScreen from './src/screens/VendorRegisterOTPScreen';
 import OTPVerifyScreen from './src/screens/OTPVerifyScreen';
+import VendorBusinessDetailsScreen from './src/screens/VendorBusinessDetailsScreen';
+import VendorCategorySelectionScreen from './src/screens/VendorCategorySelectionScreen';
+import VendorSellerDetailsScreen from './src/screens/VendorSellerDetailsScreen';
+import VendorBankDetailsScreen from './src/screens/VendorBankDetailsScreen';
+import VendorBrandDetailsScreen from './src/screens/VendorBrandDetailsScreen';
 import MainTabNavigator from './src/navigation/MainTabNavigator';
 import { RootStackParamList } from './src/navigation/types';
 
@@ -52,6 +57,27 @@ function App(): React.JSX.Element {
           <Stack.Screen
             name="OTPVerify"
             component={OTPVerifyScreen}
+          />
+          <Stack.Screen
+            name="VendorBusinessDetails"
+            component={VendorBusinessDetailsScreen}
+          />
+          <Stack.Screen
+            name="VendorCategorySelection"
+            component={VendorCategorySelectionScreen}
+            options={{ presentation: 'transparentModal', headerShown: false }}
+          />
+          <Stack.Screen
+            name="VendorSellerDetails"
+            component={VendorSellerDetailsScreen}
+          />
+          <Stack.Screen
+            name="VendorBankDetails"
+            component={VendorBankDetailsScreen}
+          />
+          <Stack.Screen
+            name="VendorBrandDetails"
+            component={VendorBrandDetailsScreen}
           />
           <Stack.Screen
             name="MainApp"
