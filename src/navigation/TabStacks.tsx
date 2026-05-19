@@ -10,11 +10,13 @@ import VendorProductListScreen from '../screens/VendorProductListScreen';
 import VendorAddProductScreen from '../screens/VendorAddProductScreen';
 import VendorEditProductScreen from '../screens/VendorEditProductScreen';
 import VendorProfileScreen from '../screens/VendorProfileScreen';
+import VendorTransactionsScreen from '../screens/VendorTransactionsScreen';
 
 import { 
   TabStackParamList, 
   OrdersStackParamList, 
-  ProductsStackParamList 
+  ProductsStackParamList,
+  ProfileStackParamList
 } from './types';
 
 const Stack = createNativeStackNavigator();
@@ -53,8 +55,10 @@ export const ProductsStack = () => (
 );
 
 // Profile Stack
+const ProfileStackLayer = createNativeStackNavigator<ProfileStackParamList>();
 export const ProfileStack = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
-    <Stack.Screen name="VendorProfile" component={VendorProfileScreen} />
-  </Stack.Navigator>
+  <ProfileStackLayer.Navigator screenOptions={{ headerShown: false }}>
+    <ProfileStackLayer.Screen name="VendorProfile" component={VendorProfileScreen} />
+    <ProfileStackLayer.Screen name="VendorTransactions" component={VendorTransactionsScreen} />
+  </ProfileStackLayer.Navigator>
 );

@@ -11,6 +11,7 @@ export type RootStackParamList = {
     VendorSellerDetails: undefined;
     VendorBankDetails: undefined;
     VendorBrandDetails: undefined;
+    VendorProfile: undefined;
     MainApp: NavigatorScreenParams<TabStackParamList>;
 };
 
@@ -19,7 +20,7 @@ export type TabStackParamList = {
     Categories: undefined;
     Orders: NavigatorScreenParams<OrdersStackParamList>;
     Products: NavigatorScreenParams<ProductsStackParamList>;
-    Profile: undefined;
+    Profile: NavigatorScreenParams<ProfileStackParamList>;
 };
 
 export type OrdersStackParamList = {
@@ -31,4 +32,9 @@ export type ProductsStackParamList = {
     VendorProductList: undefined;
     VendorAddProduct: undefined;
     VendorEditProduct: { productId: string };
+};
+
+export type ProfileStackParamList = {
+    VendorProfile: undefined;
+    VendorTransactions: undefined;
 };

@@ -8,15 +8,16 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
+    Platform,
 } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
 
 const { width } = Dimensions.get('window');
 
 type VendorProfileNavigationProp = NativeStackNavigationProp<
-    RootStackParamList,
+    any,
     'VendorProfile'
 >;
 
@@ -25,10 +26,10 @@ interface Props {
 }
 
 const VendorProfileScreen: React.FC<Props> = ({ navigation }) => {
-    const renderQuickAction = (icon: string, label: string) => (
-        <TouchableOpacity style={styles.quickActionCard}>
+    const renderQuickAction = (icon: string, label: string, onPress?: () => void) => (
+        <TouchableOpacity style={styles.quickActionCard} onPress={onPress}>
             <View style={styles.quickActionIconContainer}>
-                <Feather name={icon} size={22} color="#F57C00" />
+                <Ionicons name={icon} size={28} color="#FF7A00" />
             </View>
             <Text style={styles.quickActionLabel}>{label}</Text>
         </TouchableOpacity>
@@ -37,34 +38,42 @@ const VendorProfileScreen: React.FC<Props> = ({ navigation }) => {
     const renderMenuItem = (icon: string, label: string, isLogout?: boolean) => (
         <TouchableOpacity style={styles.menuItemCard}>
             <View style={styles.menuItemLeft}>
-                <Feather name={icon} size={22} color="#F57C00" />
-                <Text style={[styles.menuItemLabel, isLogout && { color: '#F57C00' }]}>{label}</Text>
+                <View style={styles.menuIconContainer}>
+                    <Ionicons name={icon} size={24} color="#FF7A00" />
+                </View>
+                <Text style={styles.menuItemLabel}>{label}</Text>
             </View>
             <View style={styles.menuItemRight}>
-                <Feather name="chevron-right" size={20} color="#000" />
+                <Ionicons name="chevron-forward" size={20} color="#000" />
             </View>
         </TouchableOpacity>
     );
 
     return (
         <SafeAreaView style={styles.root}>
-            {/* 1. HEADER SECTION */}
+            {/* Top Faded Text */}
+            <Text style={styles.topFadedText}>PROFILE</Text>
+
+            {/* Header Row */}
             <View style={styles.header}>
-                <TouchableOpacity style={styles.headerButton} onPress={() => navigation.goBack()}>
-                    <Feather name="chevron-left" size={24} color="#000" />
+                <TouchableOpacity style={styles.circularButton} onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={24} color="#000" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Profile</Text>
-                <TouchableOpacity style={styles.headerButton}>
-                    <Feather name="shopping-bag" size={20} color="#F57C00" />
+                <TouchableOpacity style={styles.circularButton}>
+                    <Ionicons name="settings-sharp" size={22} color="#FF7A00" />
                 </TouchableOpacity>
             </View>
 
-            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-                {/* 2. USER PROFILE SECTION */}
+            <ScrollView 
+                contentContainerStyle={styles.scrollContent} 
+                showsVerticalScrollIndicator={false}
+            >
+                {/* Profile Section */}
                 <View style={styles.profileSection}>
                     <View style={styles.avatarWrapper}>
                         <Image
-                            source={{ uri: 'https://res.cloudinary.com/ddirrlngo/image/upload/v1772698012/logo_ws8i3j.png' }} // Using avatar placeholder
+                            source={{ uri: 'https://res.cloudinary.com/ddirrlngo/image/upload/v1772698012/logo_ws8i3j.png' }}
                             style={styles.avatar}
                         />
                     </View>
@@ -72,22 +81,21 @@ const VendorProfileScreen: React.FC<Props> = ({ navigation }) => {
                     <Text style={styles.userEmail}>amitpatel@gmail.com</Text>
                 </View>
 
-                {/* 3. QUICK ACTION CARDS */}
+                {/* Quick Actions Row */}
                 <View style={styles.quickActionsRow}>
-                    {renderQuickAction('bell', 'Notification')}
-                    {renderQuickAction('home', 'Bank Details')}
-                    {renderQuickAction('rotate-ccw', 'History')}
+                    {renderQuickAction('notifications', 'Notification')}
+                    {renderQuickAction('business', 'Bank Details', () => navigation.navigate('VendorTransactions'))}
+                    {renderQuickAction('time', 'History')}
                 </View>
 
-                {/* 4. MENU LIST SECTION */}
+                {/* Menu List Section */}
                 <View style={styles.menuSection}>
-                    {renderMenuItem('user', 'Edit Profile')}
-                    {renderMenuItem('map-pin', 'Address Management')}
-                    {renderMenuItem('help-circle', 'Help & Support')}
-                    {renderMenuItem('log-out', 'Log Out', true)}
+                    {renderMenuItem('person-circle-outline', 'Edit Profile')}
+                    {renderMenuItem('storefront-outline', 'Store Information')}
+                    {renderMenuItem('help-buoy-outline', 'Help & Support')}
+                    {renderMenuItem('log-out-outline', 'Log Out')}
                 </View>
             </ScrollView>
-
         </SafeAreaView>
     );
 };
@@ -95,39 +103,52 @@ const VendorProfileScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#FFFFFF',
+    },
+    topFadedText: {
+        fontSize: 14,
+        color: '#BDBDBD',
+        marginLeft: 16,
+        marginTop: 10,
+        fontWeight: '500',
     },
     header: {
-        height: 70,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        marginTop: 10,
+        marginTop: 15,
+        marginBottom: 20,
     },
-    headerButton: {
-        width: 44,
-        height: 44,
-        borderRadius: 22,
+    circularButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#000',
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
+        borderColor: '#E0E0E0',
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 4,
+            },
+        }),
     },
     headerTitle: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         color: '#000',
     },
     scrollContent: {
-        padding: 20,
-        paddingBottom: 100,
+        paddingHorizontal: 20,
+        paddingBottom: 40,
     },
     profileSection: {
         alignItems: 'center',
@@ -140,11 +161,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.15,
+                shadowRadius: 6,
+            },
+            android: {
+                elevation: 6,
+            },
+        }),
         marginBottom: 16,
     },
     avatar: {
@@ -155,18 +182,18 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 22,
         fontWeight: 'bold',
-        color: '#F57C00',
+        color: '#FF7A00',
     },
     userEmail: {
         fontSize: 14,
-        color: '#333',
+        color: '#000',
         marginTop: 4,
         fontWeight: '500',
     },
     quickActionsRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 30,
+        marginBottom: 25,
     },
     quickActionCard: {
         width: (width - 60) / 3,
@@ -176,15 +203,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#000',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        borderColor: '#F0F0F0',
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 5,
+            },
+        }),
     },
     quickActionIconContainer: {
-        marginBottom: 8,
+        marginBottom: 6,
     },
     quickActionLabel: {
         fontSize: 10,
@@ -192,7 +225,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     menuSection: {
-        gap: 16,
+        gap: 15,
     },
     menuItemCard: {
         height: 65,
@@ -201,38 +234,47 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
         borderWidth: 1,
-        borderColor: '#000',
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
+        borderColor: '#F0F0F0',
+        ...Platform.select({
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.1,
+                shadowRadius: 6,
+            },
+            android: {
+                elevation: 6,
+            },
+        }),
     },
     menuItemLeft: {
         flexDirection: 'row',
         alignItems: 'center',
     },
+    menuIconContainer: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     menuItemLabel: {
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: 'bold',
         color: '#000',
-        marginLeft: 20,
+        marginLeft: 10,
     },
     menuItemRight: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
+        width: 34,
+        height: 34,
+        borderRadius: 17,
         borderWidth: 1,
-        borderColor: '#000',
+        borderColor: '#E0E0E0',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
-        elevation: 2,
     },
-
-
 });
 
 export default VendorProfileScreen;
