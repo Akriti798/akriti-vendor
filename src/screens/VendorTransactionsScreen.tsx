@@ -101,7 +101,16 @@ export default function VendorTransactionsScreen() {
               return (
                 <TouchableOpacity
                   key={tab}
-                  onPress={() => setActiveTab(tab)}
+                  onPress={() => {
+                    setActiveTab(tab);
+                    if (tab === 'Withdrawals') {
+                      navigation.navigate('Withdraw' as never);
+                    } else if (tab === 'Earnings') {
+                      navigation.navigate('EarningDashboard' as never);
+                    } else if (tab === 'Refunds') {
+                      navigation.navigate('RefundTransactions' as never);
+                    }
+                  }}
                   style={[
                     styles.tabItem,
                     isActive ? styles.tabItemActive : styles.tabItemInactive,

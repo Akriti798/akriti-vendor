@@ -11,7 +11,10 @@ import VendorAddProductScreen from '../screens/VendorAddProductScreen';
 import VendorEditProductScreen from '../screens/VendorEditProductScreen';
 import VendorProfileScreen from '../screens/VendorProfileScreen';
 import VendorTransactionsScreen from '../screens/VendorTransactionsScreen';
-
+import WithdrawScreen from '../screens/WithdrawScreen';
+import EarningDashboardScreen from '../screens/EarningDashboardScreen';
+import RefundTransactionsScreen from '../screens/RefundTransactionsScreen';
+import SettingsDashboardScreen from '../screens/SettingsDashboardScreen';
 import { 
   TabStackParamList, 
   OrdersStackParamList, 
@@ -60,5 +63,9 @@ export const ProfileStack = () => (
   <ProfileStackLayer.Navigator screenOptions={{ headerShown: false }}>
     <ProfileStackLayer.Screen name="VendorProfile" component={VendorProfileScreen} />
     <ProfileStackLayer.Screen name="VendorTransactions" component={VendorTransactionsScreen} />
+    <ProfileStackLayer.Screen name="Withdraw" component={WithdrawScreen} />
+    <ProfileStackLayer.Screen name="EarningDashboard" component={EarningDashboardScreen} />
+    <ProfileStackLayer.Screen name="RefundTransactions" component={RefundTransactionsScreen} />
+    <ProfileStackLayer.Screen name="SettingsDashboard" component={SettingsDashboardScreen} />
   </ProfileStackLayer.Navigator>
 );

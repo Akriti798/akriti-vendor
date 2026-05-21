@@ -37,4 +37,8 @@ export type ProductsStackParamList = {
 export type ProfileStackParamList = {
     VendorProfile: undefined;
     VendorTransactions: undefined;
+    Withdraw: undefined;
+    EarningDashboard: undefined;
+    RefundTransactions: undefined;
+    SettingsDashboard: undefined;
 };

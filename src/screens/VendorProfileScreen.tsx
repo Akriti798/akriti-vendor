@@ -60,7 +60,7 @@ const VendorProfileScreen: React.FC<Props> = ({ navigation }) => {
                     <Ionicons name="chevron-back" size={24} color="#000" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Profile</Text>
-                <TouchableOpacity style={styles.circularButton}>
+                <TouchableOpacity style={styles.circularButton} onPress={() => navigation.navigate('SettingsDashboard')}>
                     <Ionicons name="settings-sharp" size={22} color="#FF7A00" />
                 </TouchableOpacity>
             </View>
