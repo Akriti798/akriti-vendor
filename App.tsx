@@ -13,9 +13,11 @@ import OTPVerifyScreen from './src/screens/OTPVerifyScreen';
 import VendorBusinessDetailsScreen from './src/screens/VendorBusinessDetailsScreen';
 import VendorCategorySelectionScreen from './src/screens/VendorCategorySelectionScreen';
 import VendorSellerDetailsScreen from './src/screens/VendorSellerDetailsScreen';
+import VendorShippingLocationScreen from './src/screens/VendorShippingLocationScreen';
 import VendorBankDetailsScreen from './src/screens/VendorBankDetailsScreen';
 import VendorBrandDetailsScreen from './src/screens/VendorBrandDetailsScreen';
 import MainTabNavigator from './src/navigation/MainTabNavigator';
+
 import { RootStackParamList } from './src/navigation/types';
 
 
@@ -79,6 +81,10 @@ function App(): React.JSX.Element {
             name="VendorBrandDetails"
             component={VendorBrandDetailsScreen}
           />
+          <Stack.Screen
+                      name="VendorShippingLocation"
+                      component={VendorShippingLocationScreen}
+                    />
           <Stack.Screen
             name="MainApp"
             component={MainTabNavigator}

@@ -117,7 +117,7 @@ const VendorBrandDetailsScreen: React.FC<Props> = ({ navigation }) => {
                 {/* Save Button */}
                 <TouchableOpacity 
                     style={styles.saveButton}
-                    onPress={() => navigation.navigate('MainApp', { screen: 'Home' })}
+                    onPress={() => navigation.navigate('VendorShippingLocation')}
                 >
                     <Text style={styles.saveButtonText}>Save & continue</Text>
                 </TouchableOpacity>

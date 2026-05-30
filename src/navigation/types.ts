@@ -6,11 +6,13 @@ export type RootStackParamList = {
     VendorRegister: undefined;
     VendorRegisterOTP: { mobileNumber: string };
     OTPVerify: { mobileNumber: string };
-    VendorBusinessDetails: undefined;
-    VendorCategorySelection: undefined;
+    VendorBusinessDetails: { selectedCategories?: string[] } | undefined;
+    VendorCategorySelection: { selectedCategories?: string[] } | undefined;
     VendorSellerDetails: undefined;
     VendorBankDetails: undefined;
     VendorBrandDetails: undefined;
+    VendorShippingLocation: undefined;
+
     VendorProfile: undefined;
     MainApp: NavigatorScreenParams<TabStackParamList>;
 };

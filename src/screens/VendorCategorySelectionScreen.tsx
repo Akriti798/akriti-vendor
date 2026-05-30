@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    ScrollView,
     SafeAreaView,
     TouchableOpacity,
     Image,
@@ -33,14 +32,43 @@ const CATEGORIES = [
     "Personal Care > Women's Grooming > After Shave",
 ];
 
-const VendorCategorySelectionScreen: React.FC<Props> = ({ navigation }) => {
+const VendorCategorySelectionScreen: React.FC<Props> = ({ navigation, route }) => {
+    const existingCategories: string[] = route.params?.selectedCategories ?? [];
     const [search, setSearch] = useState('');
+    const [selected, setSelected] = useState<string[]>(existingCategories);
 
-    const renderItem = ({ item }: { item: string }) => (
-        <TouchableOpacity style={styles.categoryItem}>
-            <Text style={styles.categoryText}>{item}</Text>
-        </TouchableOpacity>
+    const filtered = CATEGORIES.filter(cat =>
+        cat.toLowerCase().includes(search.toLowerCase())
     );
+
+    const toggleCategory = (cat: string) => {
+        if (selected.includes(cat)) {
+            setSelected(prev => prev.filter(c => c !== cat));
+        } else {
+            if (selected.length >= 10) return;
+            setSelected(prev => [...prev, cat]);
+        }
+    };
+
+    const handleDone = () => {
+        navigation.navigate('VendorBusinessDetails', { selectedCategories: selected });
+    };
+
+    const renderItem = ({ item }: { item: string }) => {
+        const isSelected = selected.includes(item);
+        return (
+            <TouchableOpacity
+                style={[styles.categoryItem, isSelected && styles.categoryItemSelected]}
+                onPress={() => toggleCategory(item)}
+                activeOpacity={0.7}
+            >
+                <Text style={[styles.categoryText, isSelected && styles.categoryTextSelected]}>
+                    {item}
+                </Text>
+                {isSelected && <Text style={styles.checkmark}>✓</Text>}
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -82,9 +110,16 @@ const VendorCategorySelectionScreen: React.FC<Props> = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
+                {/* Selected count hint */}
+                {selected.length > 0 && (
+                    <Text style={styles.selectedCount}>
+                        {selected.length}/10 selected
+                    </Text>
+                )}
+
                 {/* Category List */}
                 <FlatList
-                    data={CATEGORIES}
+                    data={filtered}
                     renderItem={renderItem}
                     keyExtractor={(item) => item}
                     style={styles.list}
@@ -93,9 +128,9 @@ const VendorCategorySelectionScreen: React.FC<Props> = ({ navigation }) => {
                 />
 
                 {/* Done Button */}
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.doneButton}
-                    onPress={() => navigation.goBack()}
+                    onPress={handleDone}
                 >
                     <Text style={styles.doneButtonText}>Done</Text>
                 </TouchableOpacity>
@@ -192,6 +227,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         fontWeight: 'bold',
     },
+    selectedCount: {
+        fontSize: 11,
+        color: '#2E7D32',
+        fontWeight: '600',
+        marginTop: 6,
+        marginBottom: -6,
+        marginLeft: 2,
+    },
     list: {
         marginTop: 15,
         flex: 1,
@@ -200,12 +243,36 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     categoryItem: {
-        marginBottom: 15,
+        marginBottom: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
+        borderRadius: 8,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
+        backgroundColor: '#FAFAFA',
+    },
+    categoryItemSelected: {
+        borderColor: '#2E7D32',
+        backgroundColor: '#F1F8F1',
     },
     categoryText: {
         fontSize: 13,
         color: '#000',
         lineHeight: 20,
+        flex: 1,
+    },
+    categoryTextSelected: {
+        color: '#2E7D32',
+        fontWeight: '600',
+    },
+    checkmark: {
+        fontSize: 14,
+        color: '#2E7D32',
+        fontWeight: '700',
+        marginLeft: 8,
     },
     doneButton: {
         backgroundColor: '#000',

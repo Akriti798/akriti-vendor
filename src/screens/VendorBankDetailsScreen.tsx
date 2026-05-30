@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -14,10 +14,15 @@ import { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VendorBankDetails'>;
 
+const ACCOUNT_TYPES = ['Savings', 'Current', 'Salary', 'Fixed Deposit', 'NRI Account'];
+
 const VendorBankDetailsScreen: React.FC<Props> = ({ navigation }) => {
+    const [accountType, setAccountType] = useState('Savings');
+    const [showAccountTypeDropdown, setShowAccountTypeDropdown] = useState(false);
+
     return (
         <SafeAreaView style={styles.safeArea}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
                 {/* Top Header Text */}
                 <Text style={styles.topFadedText}>Bank Detail</Text>
 
@@ -98,7 +103,7 @@ const VendorBankDetailsScreen: React.FC<Props> = ({ navigation }) => {
 
                     {/* Re-enter Account Number */}
                     <Text style={styles.fieldLabel}>
-                        Re-enter Account Number<Text style={styles.required}>*</Text>
+                        Enter Account Number<Text style={styles.required}>*</Text>
                     </Text>
                     <View style={styles.inputBox}>
                         <TextInput
@@ -123,14 +128,51 @@ const VendorBankDetailsScreen: React.FC<Props> = ({ navigation }) => {
                             </View>
                         </View>
 
-                        <View style={styles.fieldHalf}>
+                        {/* Account Type Dropdown */}
+                        <View style={[styles.fieldHalf, styles.dropdownWrapper]}>
                             <Text style={styles.fieldLabel}>
                                 Account Type<Text style={styles.required}>*</Text>
                             </Text>
-                            <View style={[styles.inputBox, styles.dropdownBox]}>
-                                <Text style={styles.dropdownPlaceholder}>Savings</Text>
-                                <Text style={styles.arrowDown}>▼</Text>
-                            </View>
+                            <TouchableOpacity
+                                style={[styles.inputBox, styles.dropdownBox]}
+                                onPress={() => setShowAccountTypeDropdown(!showAccountTypeDropdown)}
+                                activeOpacity={0.8}
+                            >
+                                <Text style={styles.dropdownPlaceholder}>{accountType}</Text>
+                                <Text style={styles.arrowDown}>
+                                    {showAccountTypeDropdown ? '▲' : '▼'}
+                                </Text>
+                            </TouchableOpacity>
+
+                            {showAccountTypeDropdown && (
+                                <View style={styles.dropdownList}>
+                                    {ACCOUNT_TYPES.map((type) => (
+                                        <TouchableOpacity
+                                            key={type}
+                                            style={[
+                                                styles.dropdownOption,
+                                                accountType === type && styles.dropdownOptionSelected,
+                                            ]}
+                                            onPress={() => {
+                                                setAccountType(type);
+                                                setShowAccountTypeDropdown(false);
+                                            }}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.dropdownOptionText,
+                                                    accountType === type && styles.dropdownOptionTextSelected,
+                                                ]}
+                                            >
+                                                {type}
+                                            </Text>
+                                            {accountType === type && (
+                                                <Text style={styles.dropdownCheckmark}>✓</Text>
+                                            )}
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            )}
                         </View>
                     </View>
 
@@ -161,7 +203,7 @@ const VendorBankDetailsScreen: React.FC<Props> = ({ navigation }) => {
                 </View>
 
                 {/* Save Button */}
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.saveButton}
                     onPress={() => navigation.navigate('VendorBrandDetails')}
                 >
@@ -345,6 +387,50 @@ const styles = StyleSheet.create({
     },
     fieldHalf: {
         width: '48%',
+    },
+    dropdownWrapper: {
+        zIndex: 999,
+    },
+    dropdownList: {
+        position: 'absolute',
+        top: 75,
+        left: 0,
+        right: 0,
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#CCC',
+        zIndex: 999,
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        overflow: 'hidden',
+    },
+    dropdownOption: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingVertical: 11,
+        paddingHorizontal: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+    },
+    dropdownOptionSelected: {
+        backgroundColor: '#F1F8F1',
+    },
+    dropdownOptionText: {
+        fontSize: 13,
+        color: '#333',
+    },
+    dropdownOptionTextSelected: {
+        color: '#2E7D32',
+        fontWeight: '600',
+    },
+    dropdownCheckmark: {
+        fontSize: 13,
+        color: '#2E7D32',
+        fontWeight: '700',
     },
     saveButton: {
         backgroundColor: '#000',
