@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform, Animated } from 're
 import { createBottomTabNavigator, BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+
 // Import our Tab Stacks
 import { 
   HomeStack, 
@@ -42,30 +43,35 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
           };
 
           // Map emojis
-          let emoji = '';
-          let label = '';
-          switch (route.name) {
-            case 'Home':
-              emoji = '🏠';
-              label = 'Home';
-              break;
-            case 'Products':
-              emoji = '📦';
-              label = 'Products';
-              break;
-            case 'Categories':
-              emoji = '📁';
-              label = 'Categories';
-              break;
-            case 'Orders':
-              emoji = '📜';
-              label = 'Orders';
-              break;
-            case 'Profile':
-              emoji = '👤';
-              label = 'Profile';
-              break;
-          }
+let iconName = '';
+let label = '';
+
+switch (route.name) {
+  case 'Home':
+    iconName = isFocused ? 'home' : 'home-outline';
+    label = 'Home';
+    break;
+
+  case 'Products':
+    iconName = isFocused ? 'cube' : 'cube-outline';
+    label = 'Products';
+    break;
+
+  case 'Categories':
+    iconName = isFocused ? 'grid' : 'grid-outline';
+    label = 'Categories';
+    break;
+
+  case 'Orders':
+    iconName = isFocused ? 'receipt' : 'receipt-outline';
+    label = 'Orders';
+    break;
+
+  case 'Profile':
+    iconName = isFocused ? 'person' : 'person-outline';
+    label = 'Profile';
+    break;
+}
 
           return (
             <TouchableOpacity
@@ -79,14 +85,13 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
               style={styles.tabItem}
               activeOpacity={0.7}
             >
-              <View style={styles.iconContainer}>
-                <Text style={[
-                    styles.emojiIcon,
-                    { opacity: isFocused ? 1 : 0.6 }
-                ]}>
-                    {emoji}
-                </Text>
-              </View>
+             <View style={styles.iconContainer}>
+               <Ionicons
+                 name={iconName}
+                 size={24}
+                 color={isFocused ? '#ff7a00' : '#8E8E93'}
+               />
+             </View>
               <Text style={[
                 styles.tabLabel,
                 { color: isFocused ? '#ff7a00' : '#8E8E93', fontWeight: isFocused ? '700' : '500' }
@@ -155,8 +160,10 @@ const styles = StyleSheet.create({
     padding: 4,
     borderRadius: 12,
   },
-  emojiIcon: {
-    fontSize: 22,
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 28,
   },
   tabLabel: {
     fontSize: 10,
