@@ -14,7 +14,9 @@ import { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'VendorBusinessDetails'>;
 
-const VendorBusinessDetailsScreen: React.FC<Props> = ({ navigation }) => {
+const VendorBusinessDetailsScreen: React.FC<Props> = ({ navigation, route }) => {
+    const selectedCategories: string[] = route.params?.selectedCategories ?? [];
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -70,19 +72,43 @@ const VendorBusinessDetailsScreen: React.FC<Props> = ({ navigation }) => {
                 <View style={styles.sectionContainer}>
                     <Text style={styles.fieldLabel}>Category & sales details *</Text>
                     <Text style={styles.fieldSubLabel}>Top Category for your product (Upto 10) *</Text>
-                    
-                    <TouchableOpacity 
+
+                    {/* Selected category chips */}
+                    {selectedCategories.length > 0 && (
+                        <View style={styles.chipsContainer}>
+                            {selectedCategories.map((cat) => {
+                                // Show only the last part of the path as chip label
+                                const label = cat.split(' > ').pop() ?? cat;
+                                return (
+                                    <View key={cat} style={styles.chip}>
+                                        <Text style={styles.chipText} numberOfLines={1}>{label}</Text>
+                                    </View>
+                                );
+                            })}
+                        </View>
+                    )}
+
+                    {/* Add / Add more button */}
+                    <TouchableOpacity
                         style={styles.addCategoryBox}
-                        onPress={() => navigation.navigate('VendorCategorySelection')}
+                        onPress={() =>
+                            navigation.navigate('VendorCategorySelection', {
+                                selectedCategories,
+                            })
+                        }
                     >
-                        <Text style={styles.addCategoryText}>+ Tap to add a category</Text>
+                        <Text style={styles.addCategoryText}>
+                            {selectedCategories.length === 0
+                                ? '+ Tap to add a category'
+                                : `+ Add more (${selectedCategories.length}/10)`}
+                        </Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* Retail Channel Section */}
                 <View style={styles.sectionContainer}>
                     <Text style={styles.channelTitle}>Select your retail channels</Text>
-                    
+
                     <View style={styles.channelCard}>
                         <View style={styles.inputWrapper}>
                             <Text style={styles.floatingLabel}>Retail chanel *</Text>
@@ -110,7 +136,7 @@ const VendorBusinessDetailsScreen: React.FC<Props> = ({ navigation }) => {
                 </View>
 
                 {/* Save Button */}
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.saveButton}
                     onPress={() => navigation.navigate('VendorSellerDetails')}
                 >
@@ -247,6 +273,29 @@ const styles = StyleSheet.create({
         color: '#444',
         marginTop: 5,
     },
+
+    // ── Selected chips ──
+    chipsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 6,
+        marginTop: 10,
+    },
+    chip: {
+        backgroundColor: '#E9E6CF',
+        borderRadius: 20,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderWidth: 1,
+        borderColor: '#2E7D32',
+        maxWidth: 160,
+    },
+    chipText: {
+        fontSize: 12,
+        color: '#2E7D32',
+        fontWeight: '500',
+    },
+
     addCategoryBox: {
         backgroundColor: '#E9E6CF',
         height: 70,
