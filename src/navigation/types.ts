@@ -31,7 +31,7 @@ export type OrdersStackParamList = {
 };
 
 export type ProductsStackParamList = {
-    VendorProductList: undefined;
+   VendorProductList: { updatedProduct?: Product; newProduct?: Product } | undefined;
     VendorAddProduct: undefined;
     VendorEditProduct: { productId: string };
 };
