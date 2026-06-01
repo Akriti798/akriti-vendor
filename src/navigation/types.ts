@@ -43,4 +43,5 @@ export type ProfileStackParamList = {
     EarningDashboard: undefined;
     RefundTransactions: undefined;
     SettingsDashboard: undefined;
+    StoreSetting: undefined;
 };

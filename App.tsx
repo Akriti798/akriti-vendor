@@ -16,6 +16,8 @@ import VendorSellerDetailsScreen from './src/screens/VendorSellerDetailsScreen';
 import VendorShippingLocationScreen from './src/screens/VendorShippingLocationScreen';
 import VendorBankDetailsScreen from './src/screens/VendorBankDetailsScreen';
 import VendorBrandDetailsScreen from './src/screens/VendorBrandDetailsScreen';
+import VendorStoreSettingScreen from './src/screens/VendorStoreSettingScreen';
+import VendorProfileSettingScreen from './src/screens/VendorProfileSettingScreen';
 import MainTabNavigator from './src/navigation/MainTabNavigator';
 
 import { RootStackParamList } from './src/navigation/types';
@@ -85,6 +87,14 @@ function App(): React.JSX.Element {
                       name="VendorShippingLocation"
                       component={VendorShippingLocationScreen}
                     />
+                    <Stack.Screen
+                                          name="ProfileSetting"
+                                          component={VendorProfileSettingScreen}
+                                        />
+          <Stack.Screen
+                                name="StoreSetting"
+                                component={VendorStoreSettingScreen}
+                              />
           <Stack.Screen
             name="MainApp"
             component={MainTabNavigator}
